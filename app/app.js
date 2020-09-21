@@ -13,10 +13,10 @@ wss.on("connection", (ws, req) => {
 
         if(msg.type === "message") {
             broadcastMessage(`${clientAddress}: ${msg.content}`);
+        } else if(msg.type === "text") {
+            broadcastMessage(JSON.stringify(msg))
         }
     })
-
-    ws.send(`Connected to server | ${wss.address().address}:${wss.address().port}`);
 })
 
 const broadcastMessage = message => {
