@@ -15,19 +15,19 @@ wss.on("connection", (ws, req) => {
             console.log(`${clientAddress}: ${message}`);
 
             if(msg.type === "message") {    // TODO: Debug only; to be removed
-                broadcastMessage(`${clientAddress}: ${msg.content}`);
+                broadcastMessage(ws, `${clientAddress}: ${msg.content}`);
             } else if(msg.type === "text") {
-                broadcastMessage(JSON.stringify(msg));
+                broadcastMessage(ws, JSON.stringify(msg));
             }
         } catch (e) {
             console.log(`Exception catch: ${e}`);
         }
     });
-})
+});
 
-const broadcastMessage = message => {
+const broadcastMessage = (requester, message) => {
     wss.clients.forEach((client) => {
-        if(client.readyState === WebSocket.OPEN) {
+        if(client.readyState === WebSocket.OPEN && client !== requester) {
             client.send(message)
         }
     });
