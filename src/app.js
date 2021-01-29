@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const shortid = require('shortid');
+const shortid = require("shortid");
 
 const port = 5001;
 const wss = new WebSocket.Server({ port: port });
@@ -19,6 +19,7 @@ wss.on("connection", (ws, req) => {
         test = roomId;
         rooms.get(roomId).add(ws);
         ws.roomId = roomId;
+        sendRoomId(ws, roomId);
         console.log(`room created, id: ${roomId}`);
     } else {
         if(!validateRoom(wsRoomHeader)) {
@@ -54,9 +55,9 @@ wss.on("connection", (ws, req) => {
 });
 
 const broadcastMessage = (requester, message) => {
-    wss.clients.forEach((client) => {
+    rooms.get(requester.roomId).forEach((client) => {
         if(client.readyState === WebSocket.OPEN && client !== requester) {
-            client.send(message)
+            client.send(message);
         }
     });
 };
@@ -81,4 +82,12 @@ const removeUserFromRoom = (user) => {
             console.log(`room ${user.roomId} deleted`);
         }
     }
+}
+
+function sendRoomId(ws, roomId) {
+    const msg = {
+        type: "room-id",
+        content: roomId
+    }
+    ws.send(JSON.stringify(msg));
 }
