@@ -28,6 +28,7 @@ wss.on("connection", (ws, req) => {
         } else {
             rooms.get(wsRoomHeader).add(ws);
             ws.roomId = wsRoomHeader;
+            sendRoomId(ws, wsRoomHeader);
         }
     }
 
@@ -38,9 +39,7 @@ wss.on("connection", (ws, req) => {
             const msg = JSON.parse(message);
             console.log(`${clientAddress}: ${message}`);
 
-            if(msg.type === "message") {    // TODO: Debug only; to be removed
-                broadcastMessage(ws, `${clientAddress}: ${msg.content}`);
-            } else if(msg.type === "text") {
+            if(msg.type === "text") {
                 broadcastMessage(ws, JSON.stringify(msg));
             }
         } catch (e) {
