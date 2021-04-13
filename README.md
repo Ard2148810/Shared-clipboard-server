@@ -1,4 +1,10 @@
 # **Shared clipboard server**
-Server for the clipboard sharing app. 
+Server for the clipboard sharing system. 
 This server allows to synchronize the clipboard
-on different devices using websocket.
+across different devices using websocket.
+
+Windows & Linux client
+https://github.com/Ard2148810/Shared-clipboard-client
+
+Android client
+https://github.com/Ard2148810/Shared-clipboard-android
